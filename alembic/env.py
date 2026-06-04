@@ -3,7 +3,9 @@ from logging.config import fileConfig
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 from app.database import Base
-from app.db import user  # import all models
+from app.db import user
+from app.db import categories
+from app.db import transaction
 import os
 from dotenv import load_dotenv
 from alembic import context
