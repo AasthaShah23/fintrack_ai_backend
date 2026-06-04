@@ -14,7 +14,7 @@ class User(Base):
     email = Column(String, unique=True, nullable=False, index=True)
     phone_number = Column(String, unique=True)
 
-    password_hash = Column(String, nullable=False)
+    password = Column(String, nullable=False)
 
     is_email_verified = Column(Boolean, default=False)
     is_phone_verified = Column(Boolean, default=False)
