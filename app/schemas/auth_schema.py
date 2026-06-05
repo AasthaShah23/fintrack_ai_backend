@@ -11,10 +11,6 @@ class LoginRequest(BaseModel):
         return validate_password(value)
 
 
-class ForgotPasswordRequest(BaseModel):
-    email: EmailStr
-
-
 class ResetPasswordRequest(BaseModel):
     token: str
     new_password: str
