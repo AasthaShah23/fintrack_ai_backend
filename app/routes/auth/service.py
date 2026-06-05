@@ -102,3 +102,45 @@ def login(payload: LoginRequest, db: Session):
             "phoneNumber": existing_user.phone_number
         }
     }
+
+
+def forgot_password(
+    email: EmailStr,
+    db: Session
+):
+    existing_email = (
+        db.query(User)
+        .filter(User.email == email)
+        .first()
+    )
+
+    if not existing_email:
+        raise HTTPException(
+            status_code=400,
+            detail="Email is not registered"
+        )
+
+    hashed_password = get_password_hash(user.password)
+
+    new_user = User(
+        first_name=user.first_name,
+        last_name=user.last_name,
+        email=user.email,
+        phone_number=user.phone_number,
+        password=hashed_password
+    )
+
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+
+    return {
+        "message": "Email sent successfully",
+        "data": {
+            "id": new_user.id,
+            "firstName": new_user.first_name,
+            "lastName": new_user.last_name,
+            "email": new_user.email,
+            "phoneNumber": new_user.phone_number
+        }
+    }

@@ -1,13 +1,42 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
+from sqlalchemy.orm import Session
+
 from app.schemas.user_schema import UserCreate
-from .service import register, loginUser
+from app.schemas.auth_schema import (
+    LoginRequest,
+    ForgotPasswordRequest,
+    ResetPasswordRequest
+)
+from app.database import get_db
 
-router = APIRouter(prefix="/auth", tags=["auth"])
+from .service import (
+    signup,
+    login,
+    forgot_password,
+    reset_password
+)
 
-@router.post("/register", response_model=UserCreate)
-def create_new_user(user: UserCreate):
-      return register(user)
+router = APIRouter(
+    prefix="/auth",
+    tags=["auth"]
+)
+
+
+@router.post("/signup")
+def register_user(user: UserCreate, db: Session = Depends(get_db)):
+    return signup(user, db)
+
 
 @router.post("/login")
-def login():
-    return loginUser()
+def login_user(payload: LoginRequest, db: Session = Depends(get_db)):
+    return login(payload, db)
+
+
+@router.post("/forgot-password")
+def forgot_password_api(email: EmailStr, db: Session = Depends(get_db)):
+    return forgot_password(email, db)
+
+
+@router.post("/reset-password")
+def reset_password_api(payload: ResetPasswordRequest, db: Session = Depends(get_db)):
+    return reset_password(payload, db)
