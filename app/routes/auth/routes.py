@@ -1,10 +1,9 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-
+from pydantic import EmailStr
 from app.schemas.user_schema import UserCreate
 from app.schemas.auth_schema import (
     LoginRequest,
-    ForgotPasswordRequest,
     ResetPasswordRequest
 )
 from app.database import get_db
@@ -13,7 +12,7 @@ from .service import (
     signup,
     login,
     forgot_password,
-    reset_password
+    
 )
 
 router = APIRouter(
@@ -37,6 +36,6 @@ def forgot_password_api(email: EmailStr, db: Session = Depends(get_db)):
     return forgot_password(email, db)
 
 
-@router.post("/reset-password")
-def reset_password_api(payload: ResetPasswordRequest, db: Session = Depends(get_db)):
-    return reset_password(payload, db)
+# @router.post("/reset-password")
+# def reset_password_api(payload: ResetPasswordRequest, db: Session = Depends(get_db)):
+#     return reset_password(payload, db)

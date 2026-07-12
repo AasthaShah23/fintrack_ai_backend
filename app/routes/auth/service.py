@@ -1,5 +1,6 @@
-from fastapi import HTTPException
+from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
+from sqlalchemy import or_
 
 from app.db.user import User
 from app.schemas.user_schema import UserCreate
@@ -9,36 +10,35 @@ from app.core.hash_password import get_password_hash
 from app.core.hash_password import verify_password
 from app.core.security import create_access_token
 
+from pydantic import EmailStr
 
 
-def signup(
-    user: UserCreate,
-    db: Session
-):
+def signup(user: UserCreate, db: Session):
 
-    existing_email = (
+    # Check if email or phone number already exists
+    existing_user = (
         db.query(User)
-        .filter(User.email == user.email)
+        .filter(
+            or_(
+                User.email == user.email,
+                User.phone_number == user.phone_number
+            )
+        )
         .first()
     )
 
-    if existing_email:
-        raise HTTPException(
-            status_code=400,
-            detail="Email already registered"
-        )
+    if existing_user:
+        if existing_user.email == user.email:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Email already registered"
+            )
 
-    existing_phone = (
-        db.query(User)
-        .filter(User.phone_number == user.phone_number)
-        .first()
-    )
-
-    if existing_phone:
-        raise HTTPException(
-            status_code=400,
-            detail="Phone number already registered"
-        )
+        if existing_user.phone_number == user.phone_number:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Phone number already registered"
+            )
 
     hashed_password = get_password_hash(user.password)
 
@@ -50,12 +50,28 @@ def signup(
         password=hashed_password
     )
 
-    db.add(new_user)
-    db.commit()
-    db.refresh(new_user)
+    try:
+        db.add(new_user)
+        db.commit()
+        db.refresh(new_user)
+
+    except Exception:
+        db.rollback()
+        raise HTTPException(
+            status_code=500,
+            detail="Something went wrong while creating the user."
+        )
+
+    token = create_access_token(
+    {
+        "sub": str(existing_user.id),
+        "email": existing_user.email
+    }
+    )
 
     return {
         "message": "User registered successfully",
+        "accessToken": token,
         "data": {
             "id": new_user.id,
             "firstName": new_user.first_name,
@@ -75,13 +91,13 @@ def login(payload: LoginRequest, db: Session):
      if not existing_user:
         raise HTTPException(
             status_code=400,
-            detail="Invalid email or password"
+            detail="Invalid email"
         )
 
      if not verify_password(payload.password, existing_user.password):
         raise HTTPException(
             status_code=400,
-            detail="Invalid email or password"
+            detail="Invalid password"
         )
 
      token = create_access_token(
