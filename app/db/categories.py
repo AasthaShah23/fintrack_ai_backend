@@ -4,7 +4,6 @@ from sqlalchemy import (
     String,
     Boolean,
     DateTime,
-    ForeignKey,
     UniqueConstraint
 )
 
@@ -27,7 +26,7 @@ class Category(Base):
 
     name = Column(String, nullable=False)
 
-    icon = Column(String(50))
+    tag = Column(String(50))
 
     color = Column(String(20))
 
