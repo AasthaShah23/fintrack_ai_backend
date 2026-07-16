@@ -32,7 +32,7 @@ class Category(Base):
 
     is_system = Column(
         Boolean,
-        default=True
+        default=False
     )
 
     created_at = Column(

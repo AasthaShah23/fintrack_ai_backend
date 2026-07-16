@@ -3,8 +3,7 @@ from sqlalchemy.orm import Session
 from pydantic import EmailStr
 from app.schemas.user_schema import UserCreate
 from app.schemas.auth_schema import (
-    LoginRequest,
-    ResetPasswordRequest
+    LoginRequest
 )
 from app.database import get_db
 
@@ -12,7 +11,6 @@ from .service import (
     signup,
     login,
     forgot_password,
-    
 )
 
 router = APIRouter(

@@ -62,16 +62,17 @@ def signup(user: UserCreate, db: Session):
             detail="Something went wrong while creating the user."
         )
 
-    token = create_access_token(
-    {
-        "sub": str(existing_user.id),
-        "email": existing_user.email
-    }
-    )
+    # token = create_access_token(
+    # {
+    #     "sub": str(existing_user.id),
+    #     "id": existing_user.id,
+    #     "email": new_user.email
+    # }
+    # )
 
     return {
         "message": "User registered successfully",
-        "accessToken": token,
+        # "accessToken": token,
         "data": {
             "id": new_user.id,
             "firstName": new_user.first_name,
@@ -103,6 +104,7 @@ def login(payload: LoginRequest, db: Session):
      token = create_access_token(
     {
         "sub": str(existing_user.id),
+        "id": existing_user.id,
         "email": existing_user.email
     }
 )
