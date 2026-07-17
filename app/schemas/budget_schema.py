@@ -1,33 +1,24 @@
-from datetime import datetime
-from decimal import Decimal
-from typing import Optional
-
 from pydantic import BaseModel
+from app.schemas.category_schema import CategoryResponse
+class CreateBudgetRequest(BaseModel):
+    budget: float
 
-
-class BudgetCreate(BaseModel):
-    month: int
-    year: int
-
-    limit_amount: Decimal
-
-
-class BudgetUpdate(BaseModel):
-    limit_amount: Decimal
-
+    model_config = {
+        "from_attributes": True
+    }
 
 class BudgetResponse(BaseModel):
     id: int
-
-    user_id: int
-
-    month: int
-    year: int
-
-    limit_amount: Decimal
-
-    created_at: datetime
-    updated_at: datetime
+    monthly_budget: int
 
     class Config:
         from_attributes = True
+
+class GetBudgetResponse(BaseModel):
+    id: int
+    monthly_budget: float
+    category: CategoryResponse
+
+    model_config = {
+        "from_attributes": True
+    }

@@ -1,8 +1,5 @@
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
-from sqlalchemy import or_
-
-from app.db.user import User
 from app.schemas.category_schema import CategoryCreate, CategoryResponse, CategoryUpdate
 
 from app.db.categories import Category

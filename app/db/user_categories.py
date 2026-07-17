@@ -8,7 +8,7 @@ from sqlalchemy import (
 )
 
 from datetime import datetime, timezone
-
+from sqlalchemy.orm import relationship
 from app.database import Base
 
 
@@ -49,3 +49,5 @@ class UserCategory(Base):
         default=lambda: datetime.now(timezone.utc),
         onupdate=lambda: datetime.now(timezone.utc)
     )
+
+    category = relationship("Category", back_populates="user_categories")
