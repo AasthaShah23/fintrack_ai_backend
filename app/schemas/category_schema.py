@@ -10,8 +10,9 @@ class CategoryCreate(BaseModel):
     tag: Optional[str] = None
 
 class CategoryUpdate(BaseModel):
-    name: str
-
+    name: str | None = None
+    color: str | None = None
+    tag: str | None = None
 
 class CategoryResponse(BaseModel):
     id: int
