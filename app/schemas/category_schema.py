@@ -6,21 +6,21 @@ from pydantic import BaseModel
 
 class CategoryCreate(BaseModel):
     name: str
-
+    color: Optional[str] = None
+    tag: Optional[str] = None
 
 class CategoryUpdate(BaseModel):
-    name: str
-
+    name: str | None = None
+    color: str | None = None
+    tag: str | None = None
 
 class CategoryResponse(BaseModel):
     id: int
-    user_id: Optional[int]
-
     name: str
+    tag: Optional[str] = None
+    color: Optional[str] = None
     is_system: bool
 
-    created_at: datetime
-    updated_at: datetime
-
-    class Config:
-        from_attributes = True
+    model_config = {
+        "from_attributes": True
+    }

@@ -1,10 +1,10 @@
 from sqlalchemy import (
     Column,
     Integer,
-    String,
+    Numeric,
     Boolean,
     DateTime,
-    UniqueConstraint
+    ForeignKey,
 )
 
 from datetime import datetime, timezone
@@ -12,32 +12,31 @@ from datetime import datetime, timezone
 from app.database import Base
 
 
-class Category(Base):
-    __tablename__ = "categories"
-
-    __table_args__ = (
-        UniqueConstraint(
-            "name",
-            name="uq_category_user_name"
-        ),
-    )
+class UserCategory(Base):
+    __tablename__ = "user_categories"
 
     id = Column(Integer, primary_key=True)
 
-    name = Column(String, nullable=False)
-
-    tag = Column(String(50))
-
-    color = Column(String(20))
-
-    is_system = Column(
-        Boolean,
-        default=False
+    user_id = Column(
+        Integer,
+        ForeignKey("users.id"),
+        nullable=False
     )
 
-    is_delete = Column(
+    category_id = Column(
+        Integer,
+        ForeignKey("categories.id"),
+        nullable=False
+    )
+
+    monthly_budget = Column(
+        Numeric(10, 2),
+        nullable=True
+    )
+
+    is_active = Column(
         Boolean,
-        default=False
+        default=True
     )
 
     created_at = Column(

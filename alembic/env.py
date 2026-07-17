@@ -6,6 +6,7 @@ from app.database import Base
 from app.db import user
 from app.db import categories
 from app.db import transaction
+from app.db import user_categories
 import os
 from dotenv import load_dotenv
 from alembic import context
