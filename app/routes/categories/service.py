@@ -23,6 +23,43 @@ def get_categories(db: Session):
 
 # create a service for creating a category
 def create_category_service(db: Session, payload: CategoryCreate):
+    existing_category = (
+        db.query(Category)
+        .filter(Category.name == payload.name)
+        .first()
+    )
+
+    if existing_category:
+
+        # Category already exists and is active
+        if not existing_category.is_delete:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Category already exists."
+            )
+
+        # Restore the soft-deleted category
+        existing_category.is_delete = False
+        existing_category.color = payload.color
+        existing_category.tag = payload.tag
+
+        try:
+            db.commit()
+            db.refresh(existing_category)
+
+        except Exception:
+            db.rollback()
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Error creating category"
+            )
+
+        return {
+            "message": "Category created successfully.",
+            "data": CategoryResponse.model_validate(existing_category)
+        }
+    
+    # create a new category if it doesn't exist
     new_category = Category(
         name=payload.name,
         color=payload.color,

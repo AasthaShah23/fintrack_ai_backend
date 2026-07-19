@@ -5,7 +5,8 @@ from sqlalchemy import (
     DateTime,
     Numeric,
     Text,
-    Enum
+    Enum,
+    Boolean
 )
 
 from datetime import datetime, timezone
@@ -66,6 +67,11 @@ class Transaction(Base):
     transaction_method = Column(
         Enum(TransactionMethod),
         nullable=False
+    )
+
+    is_delete = Column(
+        Boolean,
+        default=False
     )
 
     created_at = Column(
