@@ -20,7 +20,7 @@ router = APIRouter(
 
 # Get all categories
 @router.get("/", dependencies=[Depends(get_current_user)])
-def get_category_list(db: Session = Depends(get_db), _: User = Depends(get_current_user),):
+def get_category_list(db: Session = Depends(get_db)):
     return get_categories(db)
 
 

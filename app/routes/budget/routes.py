@@ -20,17 +20,17 @@ router = APIRouter(
 
 # Set monthly budget category wise
 @router.post("/{category_id}", dependencies=[Depends(get_current_user)])
-def set_monthly_budget(category_id: int, payload: CreateBudgetRequest, db: Session = Depends(get_db), current_user: User = Depends(get_current_user),):
+def set_monthly_budget(category_id: int, payload: CreateBudgetRequest, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     return set_monthly_budget_service(category_id, db, payload, current_user)
 
 # Update monthly budget category wise
 @router.put("/{category_id}", dependencies=[Depends(get_current_user)])
-def update_monthly_budget(category_id: int, payload: CreateBudgetRequest, db: Session = Depends(get_db), current_user: User = Depends(get_current_user),):
+def update_monthly_budget(category_id: int, payload: CreateBudgetRequest, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     return update_monthly_budget_service(category_id, db, payload, current_user)
 
 # Delete monthly budget category wise
 @router.delete("/{category_id}", dependencies=[Depends(get_current_user)])
-def delete_monthly_budget(category_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user),):
+def delete_monthly_budget(category_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     return delete_monthly_budget_service(category_id, db, current_user)
 
 # Get monthly budget category wise listing
