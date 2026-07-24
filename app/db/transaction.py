@@ -11,6 +11,7 @@ from sqlalchemy import (
 
 from datetime import datetime, timezone
 import enum
+from sqlalchemy.orm import relationship
 
 from app.database import Base
 
@@ -84,3 +85,5 @@ class Transaction(Base):
         default=lambda: datetime.now(timezone.utc),
         onupdate=lambda: datetime.now(timezone.utc)
     )
+
+    category = relationship("Category", back_populates="transactions")

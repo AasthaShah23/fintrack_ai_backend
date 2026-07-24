@@ -55,3 +55,8 @@ class Category(Base):
         "UserCategory",
         back_populates="category"
     )
+
+    transactions = relationship(
+        "Transaction",  
+        back_populates="category"
+    )
